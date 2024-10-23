@@ -170,7 +170,7 @@ The service configuration can be adjusted via the `config/config.go` and `.env` 
 
 ## **To Extend the Service**
 
-To add new payment gateway follow these steps:
+To add new payment gateway just 2 steps follow these steps:
 1. **Creat client that implement the `PaymentGateway` Interface** for new gateways.
 2. **Add New Client with its key to paymentGateways in cmd** in the `cmd/api/wallet/main.go`
 
