@@ -67,19 +67,27 @@ The service is designed with modularity and extensibility in mind, separating bu
 ### **Flow of Deposit/Withdrawal**:
 
 1. **Client Request**:  
-   The user submits a **deposit** or **withdrawal** request through the API. The request is validated for correctness, including payment details validation.
+   The user submits a **deposit** or **withdrawal** request through the API.
 
-2. **Transaction Creation**:  
-   After validation, a new **transaction** is created with a status of `created` and stored in the database. This transaction is then placed into the in-memory queue for async processing.
+2. **Transaction Creation** :  
+   Our Api layer will pass it to wallet service to:
+    - validate the request amount
+    - call payment package to validate the payment details (method, method details like credit card)
+    - create transaction on db
+    - push the transaction to wallet service queue
+    - return transaction response with id and status created
 
 3. **Asynchronous Processing**:  
-   The queue worker picks up the transaction and triggers the appropriate Payment package function and the payment package with will interact with The payment gateway client (mock or real) processes the request and returns a status (e.g., `success`, `failed`, or `pending`).
+   - The queue worker picks up the transaction
+   - worker will triggers the appropriate Payment package function Deposit/Withdraw
+   - payment package will interact with The payment gateway client (mock or real) processes the request and returns a status to wallet service 
+   - wallet service will change the transaction status.
 
 4. **Callback Handling**:  
    In the case of asynchronous payment gateways, a callback URL is provided during the initial request. When the gateway confirms the transaction, the callback will triggerd. wallet service will pass it to payment package which will verify it with the payment gateway.
 
 5. **Final Status**:  
-   The transaction's final status is updated in the system and can be retrieved via the wallet API (e.g., `completed`, `failed`, or `pending`).
+   The transaction's final status is updated in the system.
 
 ### **Extensibility**:
 Adding a new payment gateway is seamless. Simply implement the `PaymentGateway` interface and plug it with its key into the `Payment` package in cmd.
@@ -170,7 +178,7 @@ The service configuration can be adjusted via the `config/config.go` and `.env` 
 
 ## **To Extend the Service**
 
-To add new payment gateway just 2 steps follow these steps:
+To add new payment gateway follow these steps:
 1. **Creat client that implement the `PaymentGateway` Interface** for new gateways.
 2. **Add New Client with its key to paymentGateways in cmd** in the `cmd/api/wallet/main.go`
 
