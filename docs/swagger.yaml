@@ -1,0 +1,368 @@
+consumes:
+    - application/json
+definitions:
+    Payment:
+        properties:
+            gateway:
+                $ref: '#/definitions/PaymentGateway'
+            method:
+                $ref: '#/definitions/PaymentMethod'
+            method_details:
+                type: object
+                x-go-name: MethodDetails
+        type: object
+        x-go-package: github.com/3bd-dev/wallet-service/internal/dto/request
+    PaymentGateway:
+        description: PaymentGateway represents the payment gateway used for a transaction
+        type: string
+        x-go-package: github.com/3bd-dev/wallet-service/internal/models
+    PaymentMethod:
+        description: PaymentMethod represents the payment method used for a transaction
+        type: string
+        x-go-package: github.com/3bd-dev/wallet-service/internal/models
+    Transaction:
+        description: GORM model definition
+        properties:
+            amount:
+                format: double
+                type: number
+                x-go-name: Amount
+            created_at:
+                format: date-time
+                type: string
+                x-go-name: CreatedAt
+            id:
+                format: uuid
+                type: string
+                x-go-name: ID
+            payment_gateway:
+                $ref: '#/definitions/PaymentGateway'
+            payment_method:
+                $ref: '#/definitions/PaymentMethod'
+            payment_method_details:
+                type: object
+                x-go-name: PaymentMethodDetails
+            reference_id:
+                type: string
+                x-go-name: ReferenceID
+            status:
+                $ref: '#/definitions/TransactionStatus'
+            type:
+                $ref: '#/definitions/TransactionType'
+            updated_at:
+                format: date-time
+                type: string
+                x-go-name: UpdatedAt
+            wallet:
+                $ref: '#/definitions/Wallet'
+            wallet_id:
+                format: uuid
+                type: string
+                x-go-name: WalletID
+        type: object
+        x-go-package: github.com/3bd-dev/wallet-service/internal/models
+    TransactionStatus:
+        description: TransactionStatus represents the status of a transaction
+        type: string
+        x-go-package: github.com/3bd-dev/wallet-service/internal/models
+    TransactionType:
+        description: TransactionType represents the type of a transaction
+        type: string
+        x-go-package: github.com/3bd-dev/wallet-service/internal/models
+    Wallet:
+        properties:
+            created_at:
+                format: date-time
+                type: string
+                x-go-name: CreatedAt
+            id:
+                format: uuid
+                type: string
+                x-go-name: ID
+            transactions:
+                items:
+                    $ref: '#/definitions/Transaction'
+                type: array
+                x-go-name: Transactions
+            updated_at:
+                format: date-time
+                type: string
+                x-go-name: UpdatedAt
+        type: object
+        x-go-package: github.com/3bd-dev/wallet-service/internal/models
+info:
+    contact:
+        email: test@exinity.com
+        name: Exinity
+        url: https://group.exinity.com
+    description: |-
+        This is the documentation for the wallet API.
+
+        Common Responses:
+
+        200: OK
+        400: Bad Request
+        404: Not Found
+        501: Internal Server Error
+    title: Wallet API Documentation
+    version: 1.0.0
+paths:
+    /api/v1/wallets:
+        get:
+            description: List all cities
+            operationId: ListWallets
+            responses:
+                "200":
+                    $ref: '#/responses/ListWalletsResponse'
+            tags:
+                - Wallets
+        post:
+            description: Create a new wallet
+            operationId: CreateWallet
+            parameters:
+                - in: body
+                  name: Body
+                  schema:
+                    type: object
+            responses:
+                "201":
+                    $ref: '#/responses/CreateWalletResponse'
+            tags:
+                - Wallets
+    /api/v1/wallets/{id}:
+        get:
+            description: Get a wallet by id
+            operationId: GetWallet
+            parameters:
+                - format: uuid
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: ID
+            responses:
+                "200":
+                    $ref: '#/responses/GetWalletResponse'
+            tags:
+                - Wallets
+    /api/v1/wallets/{id}/deposit:
+        post:
+            description: Deposit to a wallet by id
+            operationId: MakeDeposit
+            parameters:
+                - format: uuid
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: ID
+                - in: body
+                  name: Body
+                  schema:
+                    properties:
+                        amount:
+                            format: double
+                            type: number
+                            x-go-name: Amount
+                        payment:
+                            $ref: '#/definitions/Payment'
+                    type: object
+            responses:
+                "200":
+                    $ref: '#/responses/DepositResponse'
+            tags:
+                - Wallets
+    /api/v1/wallets/{id}/transactions:
+        get:
+            description: List transactions of a wallet by id
+            operationId: ListTransactions
+            parameters:
+                - format: uuid
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: ID
+            responses:
+                "200":
+                    $ref: '#/responses/ListTransactionsResponse'
+            tags:
+                - Transactions
+    /api/v1/wallets/{id}/transactions/{transaction_id}:
+        get:
+            description: Get a transaction of a wallet by id
+            operationId: GetTransaction
+            parameters:
+                - format: uuid
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: ID
+                - format: uuid
+                  in: path
+                  name: transaction_id
+                  required: true
+                  type: string
+                  x-go-name: TransactionID
+            responses:
+                "200":
+                    $ref: '#/responses/GetTransactionResponse'
+            tags:
+                - Transactions
+    /api/v1/wallets/{id}/withdraw:
+        post:
+            description: Withdraw from a wallet by id
+            operationId: MakeWithdraw
+            parameters:
+                - format: uuid
+                  in: path
+                  name: id
+                  required: true
+                  type: string
+                  x-go-name: ID
+                - in: body
+                  name: Body
+                  schema:
+                    properties:
+                        amount:
+                            format: double
+                            type: number
+                            x-go-name: Amount
+                        payment:
+                            $ref: '#/definitions/Payment'
+                    type: object
+            responses:
+                "200":
+                    $ref: '#/responses/WithdrawResponse'
+            tags:
+                - Wallets
+produces:
+    - application/json
+responses:
+    CreateWalletResponse:
+        description: ""
+        schema:
+            properties:
+                code:
+                    format: int64
+                    type: integer
+                    x-go-name: Code
+                data:
+                    $ref: '#/definitions/Wallet'
+                    x-go-name: Data
+                details:
+                    x-go-name: Details
+                message:
+                    type: string
+                    x-go-name: Message
+            type: object
+    DepositResponse:
+        description: ""
+        schema:
+            properties:
+                code:
+                    format: int64
+                    type: integer
+                    x-go-name: Code
+                data:
+                    $ref: '#/definitions/Wallet'
+                    x-go-name: Data
+                details:
+                    x-go-name: Details
+                message:
+                    type: string
+                    x-go-name: Message
+            type: object
+    GetTransactionResponse:
+        description: ""
+        schema:
+            properties:
+                code:
+                    format: int64
+                    type: integer
+                    x-go-name: Code
+                data:
+                    $ref: '#/definitions/Transaction'
+                    x-go-name: Data
+                details:
+                    x-go-name: Details
+                message:
+                    type: string
+                    x-go-name: Message
+            type: object
+    GetWalletResponse:
+        description: ""
+        schema:
+            properties:
+                code:
+                    format: int64
+                    type: integer
+                    x-go-name: Code
+                data:
+                    $ref: '#/definitions/Wallet'
+                    x-go-name: Data
+                details:
+                    x-go-name: Details
+                message:
+                    type: string
+                    x-go-name: Message
+            type: object
+    ListTransactionsResponse:
+        description: ""
+        schema:
+            properties:
+                code:
+                    format: int64
+                    type: integer
+                    x-go-name: Code
+                data:
+                    items:
+                        $ref: '#/definitions/Transaction'
+                    type: array
+                    x-go-name: Data
+                details:
+                    x-go-name: Details
+                message:
+                    type: string
+                    x-go-name: Message
+            type: object
+    ListWalletsResponse:
+        description: ""
+        schema:
+            properties:
+                code:
+                    format: int64
+                    type: integer
+                    x-go-name: Code
+                data:
+                    items:
+                        $ref: '#/definitions/Wallet'
+                    type: array
+                    x-go-name: Data
+                details:
+                    x-go-name: Details
+                message:
+                    type: string
+                    x-go-name: Message
+            type: object
+    WithdrawResponse:
+        description: ""
+        schema:
+            properties:
+                code:
+                    format: int64
+                    type: integer
+                    x-go-name: Code
+                data:
+                    $ref: '#/definitions/Wallet'
+                    x-go-name: Data
+                details:
+                    x-go-name: Details
+                message:
+                    type: string
+                    x-go-name: Message
+            type: object
+schemes:
+    - http
+swagger: "2.0"

@@ -1,0 +1,17 @@
+# Ignore environment variables
+.env
+
+# Ignore build output
+dist
+build
+
+# Ignore Docker files
+Dockerfile
+docker-compose.yml
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore OS files
+.DS_Store

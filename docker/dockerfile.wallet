@@ -1,0 +1,52 @@
+# Build the Go Binary.
+FROM golang:1.22 AS build_wallet
+ENV CGO_ENABLED=0
+ARG BUILD_REF
+
+# Enable Go modules
+ENV GO111MODULE=on
+
+# Create a working directory inside the container
+WORKDIR /service
+
+# Copy go.mod and go.sum files to download dependencies
+COPY go.mod go.sum ./
+
+# Download Go modules (dependencies)
+RUN go mod download
+
+# Copy the rest of the source code into the container
+COPY . .
+
+# Set the working directory to the wallet service directory
+WORKDIR /service/cmd/api/wallet
+
+# Build the service binary, using the passed build reference
+RUN go build -o wallet -ldflags "-X main.build=${BUILD_REF}"
+
+# Run the Go Binary in Alpine.
+FROM alpine:3.20
+ARG BUILD_DATE
+ARG BUILD_REF
+
+# Copy Swagger documentation & db migrations
+COPY --from=build_wallet --chown=wallet:wallet /service/docs /service/docs
+COPY --from=build_wallet --chown=wallet:wallet /service/internal/db/migrations /service/db/migrations
+
+
+RUN addgroup -g 1000 -S wallet && \
+    adduser -u 1000 -h /service -G wallet -S wallet
+
+COPY --from=build_wallet --chown=wallet:wallet /service/cmd/api/wallet/wallet /service/wallet
+
+WORKDIR /service
+
+USER wallet
+
+CMD ["./wallet"]
+
+# Add labels for build metadata
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.title="wallet" \
+      org.opencontainers.image.authors="Abdulrahman Saadallah <abdalrahmansaadulla@gmail.com>" \
+      org.opencontainers.image.revision="${BUILD_REF}"

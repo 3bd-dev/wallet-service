@@ -1,0 +1,57 @@
+# Build the Go Binary.
+FROM golang:1.22 AS build_mock
+ENV CGO_ENABLED=0
+ARG BUILD_REF
+
+# Enable Go modules
+ENV GO111MODULE=on
+
+# Create a working directory inside the container
+WORKDIR /service
+
+# Copy go.mod and go.sum files to download dependencies
+COPY go.mod go.sum ./
+
+# Download Go modules (dependencies)
+RUN go mod download
+
+# Copy the rest of the source code into the container
+COPY . .
+
+# Set the working directory to the wallet service directory
+WORKDIR /service/cmd/api/mock/gateway-a
+
+# Build the service binary, using the passed build reference
+RUN go build -o gatewaya
+
+# Set the working directory to the wallet service directory
+WORKDIR /service/cmd/api/mock/gateway-b
+
+# Build the service binary, using the passed build reference
+RUN go build -o gatewayb
+
+
+
+# Run the Go Binaries in Alpine.
+FROM alpine:3.20
+ARG BUILD_DATE
+ARG BUILD_REF
+
+RUN addgroup -g 1000 -S service && \
+  adduser -u 1000 -h /service -G service -S service
+
+COPY --from=build_mock --chown=service:service /service/cmd/api/mock/gateway-a/gatewaya /service/gatewaya
+COPY --from=build_mock --chown=service:service /service/cmd/api/mock/gateway-b/gatewayb /service/gatewayb
+
+WORKDIR /service
+
+USER service
+
+# Run both services
+CMD ["sh", "-c", "./gatewaya & ./gatewayb"]
+
+# Add labels for build metadata
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+    org.opencontainers.image.title="gateway-services" \
+    org.opencontainers.image.authors="Abdulrahman Saadallah <abdalrahmansaadulla@gmail.com>" \
+    org.opencontainers.image.revision="${BUILD_REF}"

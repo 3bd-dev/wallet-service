@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  db:
+    container_name: wallet-db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: dbuser
+      POSTGRES_PASSWORD: dbpassword
+      POSTGRES_DB: wallet
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - wallet-network
+  wallet:
+    container_name: wallet-api
+    build:
+      context: .
+      dockerfile: docker/dockerfile.wallet
+      args:
+        BUILD_REF: latest
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - wallet-network
+    volumes:
+      - wallet_data:/service
+  gateway-mocks:
+    container_name: gateway-mocks
+    build:
+      context: .
+      dockerfile: docker/dockerfile.mocks
+      args:
+        BUILD_REF: latest 
+    ports:
+      - "8090:8090"
+      - "8091:8091"
+    networks:
+      - wallet-network
+    depends_on:
+      - wallet
+  dbmate:
+    container_name: dbmate-migrations
+    image: amacneil/dbmate:latest
+    depends_on:
+      - db
+    networks:
+      - wallet-network
+    environment:
+      DATABASE_URL: postgres://dbuser:dbpassword@db:5432/wallet?sslmode=disable
+    volumes:
+      - wallet_data:/service  # Use the same shared volume as wallet
+    entrypoint: ["dbmate", "--wait", "--migrations-dir=/service/db/migrations", "up"]
+
+volumes:
+  db_data:
+  wallet_data:
+
+networks:
+  wallet-network:

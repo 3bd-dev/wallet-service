@@ -1,0 +1,520 @@
+{
+	"info": {
+		"_postman_id": "d878a437-af95-4373-abe8-afe28fcb30fa",
+		"name": "wallet",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23591778"
+	},
+	"item": [
+		{
+			"name": "withdraw",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 1000,\n    \"payment_gateway\": \"gateway_b\",\n    \"payment_method\": \"bank_transfer\",\n    \"initial_balance\":1000,\n    \"payment_method_details\":{\n        \"bank_code\": \"BOFAUS3NXXX\",\n        \"account_number\": \"1234567890123456\",\n        \"bank_code_type\":\"SWIFT\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/wallets/781b9e54-e726-4c05-b70d-8259e07bf185/withdraw",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wallets",
+						"781b9e54-e726-4c05-b70d-8259e07bf185",
+						"withdraw"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "bank_transfer",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 1000,\n    \"payment\": {\n        \"gateway\": \"gateway_a\",\n        \"method\": \"bank_transfer\",\n        \"method_details\":{\n            \"bank_code\": \"BOFAUS3NXXX\",\n            \"account_number\": \"1234567890123456\",\n            \"bank_code_type\":\"SWIFT\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/wallets/781b9e54-e726-4c05-b70d-8259e07bf185/withdraw",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"wallets",
+								"781b9e54-e726-4c05-b70d-8259e07bf185",
+								"withdraw"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 23 Oct 2024 06:27:32 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "451"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"id\": \"f4588e07-7283-4081-8f38-2748c099f935\",\n        \"wallet_id\": \"781b9e54-e726-4c05-b70d-8259e07bf185\",\n        \"amount\": 1000,\n        \"type\": \"withdrawal\",\n        \"status\": \"created\",\n        \"payment_gateway\": \"gateway_a\",\n        \"payment_method\": \"bank_transfer\",\n        \"payment_method_details\": {\n            \"account_number\": \"****3456\",\n            \"bank_code\": \"****NXXX\",\n            \"bank_code_type\": \"SWIFT\"\n        },\n        \"reference_id\": null,\n        \"created_at\": \"2024-10-23T10:27:32.207397+04:00\",\n        \"updated_at\": \"2024-10-23T10:27:32.207397+04:00\"\n    }\n}"
+				},
+				{
+					"name": "credit_card",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 1000,\n    \"payment\": {\n        \"gateway\": \"gateway_a\",\n        \"method\": \"credit_card\",\n        \"method_details\":{\n            \"cvv\": \"123\",\n            \"number\": \"4111111111111111\",\n            \"expiry\": \"2/29\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/wallets/781b9e54-e726-4c05-b70d-8259e07bf185/withdraw",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"wallets",
+								"781b9e54-e726-4c05-b70d-8259e07bf185",
+								"withdraw"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 23 Oct 2024 06:30:39 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "76"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 400,\n    \"message\": \"failed to verify method: unsupported payment method\"\n}"
+				}
+			]
+		},
+		{
+			"name": "deposit",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"amount\": 1000,\n    \"payment\": {\n        \"gateway\": \"gateway_a\",\n        \"method\": \"credit_card\",\n        \"method_details\":{\n            \"cvv\": \"123\",\n            \"number\": \"4111111111111111\",\n            \"expiry\": \"2/29\"\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/wallets/781b9e54-e726-4c05-b70d-8259e07bf185/deposit",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wallets",
+						"781b9e54-e726-4c05-b70d-8259e07bf185",
+						"deposit"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "credit_card",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 1000,\n    \"payment\": {\n        \"gateway\": \"gateway_a\",\n        \"method\": \"credit_card\",\n        \"method_details\":{\n            \"cvv\": \"123\",\n            \"number\": \"4111111111111111\",\n            \"expiry\": \"2/29\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/wallets/781b9e54-e726-4c05-b70d-8259e07bf185/deposit",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"wallets",
+								"781b9e54-e726-4c05-b70d-8259e07bf185",
+								"deposit"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 23 Oct 2024 06:26:05 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "429"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"id\": \"5c71726d-5286-4fb4-9600-0c8deea84966\",\n        \"wallet_id\": \"781b9e54-e726-4c05-b70d-8259e07bf185\",\n        \"amount\": 1000,\n        \"type\": \"deposit\",\n        \"status\": \"created\",\n        \"payment_gateway\": \"gateway_a\",\n        \"payment_method\": \"credit_card\",\n        \"payment_method_details\": {\n            \"number\": \"**** **** **** 1111\",\n            \"expiry\": \"2/29\",\n            \"cvv\": \"***\"\n        },\n        \"reference_id\": null,\n        \"created_at\": \"2024-10-23T10:26:05.058551+04:00\",\n        \"updated_at\": \"2024-10-23T10:26:05.058551+04:00\"\n    }\n}"
+				},
+				{
+					"name": "bank_transfer",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 1000,\n    \"payment\": {\n        \"gateway\": \"gateway_a\",\n        \"method\": \"bank_transfer\",\n        \"method_details\":{\n            \"bank_code\": \"BOFAUS3NXXX\",\n            \"account_number\": \"1234567890123456\",\n            \"bank_code_type\":\"SWIFT\"\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/wallets/781b9e54-e726-4c05-b70d-8259e07bf185/deposit",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"wallets",
+								"781b9e54-e726-4c05-b70d-8259e07bf185",
+								"deposit"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 23 Oct 2024 06:28:29 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "76"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 400,\n    \"message\": \"failed to verify method: unsupported payment method\"\n}"
+				}
+			]
+		},
+		{
+			"name": "list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/wallets",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wallets"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "listwallets",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/wallets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"wallets"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 23 Oct 2024 09:28:31 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "153"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": [\n        {\n            \"id\": \"59b0ae0c-cfa3-4fda-b9dd-61cfdb54414b\",\n            \"created_at\": \"2024-10-23T09:27:41.935604Z\",\n            \"updated_at\": \"2024-10-23T09:27:41.935604Z\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "getTransactions",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/wallets/781b9e54-e726-4c05-b70d-8259e07bf185/transactions",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wallets",
+						"781b9e54-e726-4c05-b70d-8259e07bf185",
+						"transactions"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "getWallet",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/wallets/781b9e54-e726-4c05-b70d-8259e07bf185",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"wallets",
+								"781b9e54-e726-4c05-b70d-8259e07bf185"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 21 Oct 2024 17:10:43 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "208"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"ID\": \"781b9e54-e726-4c05-b70d-8259e07bf185\",\n        \"Balance\": 1000,\n        \"AvailableBalance\": 1000,\n        \"ReservedBalance\": 0,\n        \"CreatedAt\": \"2024-10-21T15:51:10.057702Z\",\n        \"UpdatedAt\": \"2024-10-21T15:51:10.057702Z\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "getTransaction",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/wallets/781b9e54-e726-4c05-b70d-8259e07bf185/transactions/71698cc5-4494-422d-b862-cf13fdfe7b1a",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wallets",
+						"781b9e54-e726-4c05-b70d-8259e07bf185",
+						"transactions",
+						"71698cc5-4494-422d-b862-cf13fdfe7b1a"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "getTransaction",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/wallets/781b9e54-e726-4c05-b70d-8259e07bf185/transactions/f3979ca5-75a2-45ad-902e-f09bf670d63f",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"wallets",
+								"781b9e54-e726-4c05-b70d-8259e07bf185",
+								"transactions",
+								"f3979ca5-75a2-45ad-902e-f09bf670d63f"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 21 Oct 2024 17:13:56 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "422"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"id\": \"f3979ca5-75a2-45ad-902e-f09bf670d63f\",\n        \"wallet_id\": \"781b9e54-e726-4c05-b70d-8259e07bf185\",\n        \"amount\": 1000,\n        \"type\": \"deposit\",\n        \"status\": \"failed\",\n        \"payment_gateway\": \"gateway_b\",\n        \"payment_method\": \"credit_card\",\n        \"payment_method_details\": {\n            \"cvv\": \"***\",\n            \"number\": \"**** **** **** 1111\",\n            \"expiration\": \"2/29\"\n        },\n        \"reference_id\": null,\n        \"created_at\": \"2024-10-21T17:12:26.521376Z\",\n        \"updated_at\": \"2024-10-21T21:12:29.486717Z\"\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "createWallet",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"initial_balance\": 1000\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/wallets",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"wallets"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "createWallet",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"initial_balance\": 1000\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/wallets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"wallets"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Mon, 21 Oct 2024 17:20:42 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "208"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"code\": 200,\n    \"data\": {\n        \"ID\": \"447c9092-f05b-467c-b94a-e97e0ddb6beb\",\n        \"Balance\": 1000,\n        \"AvailableBalance\": 1000,\n        \"ReservedBalance\": 0,\n        \"CreatedAt\": \"2024-10-21T17:20:42.394498Z\",\n        \"UpdatedAt\": \"2024-10-21T17:20:42.394498Z\"\n    }\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "localhost:8080/api/v1",
+			"type": "string"
+		}
+	]
+}

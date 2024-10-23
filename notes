@@ -1,0 +1,5 @@
+notes 
+
+1- use logger mid in sake of time 
+2- build custom error as system error to handle multiple cases with differnt error codes, it provides types and support related to web error functionality 
+3- this service focus on wallet functionality only, and it assume that all users have exisis wallet 
