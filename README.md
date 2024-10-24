@@ -178,8 +178,13 @@ Here’s the Entities diagram representing the tables:
    The wallet service will be available at `http://localhost:8080/api/v1`.
 
 3. **API Documentation**:
+   Mock services both provide `/deposit` and `/withdraw` endpoints:
+   - GatewayA `JSON` running on `http://localhost:8090`.
+   - GatewayA `SOAP/XML` running on `http://localhost:8091`.
+  
+5. **Mock Gateways**
    - Access the OpenAPI (Swagger) documentation at `http://localhost:8080/swagger`.
-   - Postman collection `wallet.postman_collection.json` 
+   - Postman collection `wallet.postman_collection.json`
 
 ## **Configuration**
 
