@@ -5,6 +5,8 @@
 
 The **Wallet Service** is a microservice that manages wallet-related operations, including wallet creation, deposits, and withdrawals. It integrates with external payment gateways to process transactions.
 
+**Note**: This service focuses on transaction handling and uses wallets as references for the transactions. Due to time constraints, it does not currently implement wallet logic such as maintaining balance, available balance, and reserved balance.
+
 Key capabilities include:
 - Wallet creation and management.
 - Handling deposits and withdrawals.
@@ -99,6 +101,8 @@ The architecture allows for easy integration of additional payment gateways and 
 ### 6. Flow of Deposit/Withdrawal
 
 The deposit and withdrawal flow is designed to handle transactions efficiently and asynchronously while maintaining a quick response time for clients.
+
+Note: Before start the flow you need to create wallet `POST /api/v1/wallets`
 
 #### **1. Client Request**:
 The flow begins when the client submits a deposit or withdrawal request via the API. This request contains the amount and payment details.
@@ -225,9 +229,11 @@ Due to time constraints, the following improvements were not implemented but are
 
 - **Advanced Testing**: Increase test coverage beyond the payment package, covering the wallet service and API layers as well.
 
-- **Data Security**: Add encryption and hashing to secure sensitive data, such as transaction amounts, in the database.
+- **Data Security**: Add encryption and hashing to secure sensitive data, such as transaction amounts and balances, in the database.
 
 - **External Queue System**: Replace the in-memory queue with a distributed message broker like RabbitMQ or Kafka for handling large-scale transactions.
+
+- **Enhanced Wallet Logic**: Implement additional wallet logic to maintain balance, available balance, reserved balance, and validation of requests against these parameters for improved accuracy in financial transactions.
 
 These improvements will enhance the system's scalability, observability, and security in the future.
 
