@@ -178,14 +178,14 @@ Here’s the Entities diagram representing the tables:
    The wallet service will be available at `http://localhost:8080/api/v1`.
 
 3. **API Documentation**:
+   - Access the OpenAPI (Swagger) documentation at `http://localhost:8080/swagger`.
+   - Postman collection `wallet.postman_collection.json`
+  
+4. **Mock Gateways**:
    Mock services both provide `/deposit` and `/withdraw` endpoints:
    - GatewayA `JSON` running on `http://localhost:8090`.
    - GatewayA `SOAP/XML` running on `http://localhost:8091`.
-  
-5. **Mock Gateways**
-   - Access the OpenAPI (Swagger) documentation at `http://localhost:8080/swagger`.
-   - Postman collection `wallet.postman_collection.json`
-
+   
 ## **Configuration**
 
 The service configuration can be adjusted via the `config/config.go` and `.env` file. these include setting up the database, payment gateways, and other environment variables.
